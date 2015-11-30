@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/list_item"
+    android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+
+        android:id="@+id/widget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        >
+
+
+        <ImageView
+
+            android:layout_width="@dimen/widget_today_min_resize_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            tools:src="@drawable/west_ham"
+            android:id="@+id/widget_home_crest"/>
+
+        <TextView
+            android:id="@+id/widget_home_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/Whome"
+            android:textAppearance="?android:textAppearanceLarge"
+
+            tools:text="48" />
+        <TextView
+            android:id="@+id/widget_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:textColor="@android:color/darker_gray"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textSize="@dimen/Wtime"
+            android:layout_marginLeft="8dp"
+            tools:text="48" />
+
+
+        <TextView
+            android:id="@+id/wiget_away_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:textSize="@dimen/Waway"
+            android:textColor="@android:color/darker_gray"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:layout_marginLeft="8dp"
+            tools:text="48" />
+        <ImageView
+            android:layout_width="@dimen/widget_today_min_resize_width"
+
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            tools:src="@drawable/west_ham"
+            android:id="@+id/widget_away_crest"/>
+
+    </LinearLayout>
+</FrameLayout>
