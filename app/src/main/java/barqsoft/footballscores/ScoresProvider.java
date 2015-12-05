@@ -7,17 +7,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import barqsoft.footballscores.widget.WidgetDataProvider;
 
 /**
  * Created by yehya khaled on 2/25/2015.
  */
 public class ScoresProvider extends ContentProvider
 {
+    public final String LOG_TAG = ScoresProvider.class.getSimpleName();
     private static ScoresDBHelper mOpenHelper;
     private static final int MATCHES = 100;
     private static final int MATCHES_WITH_LEAGUE = 101;
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
+    private static final int MATCHES_WITH_DATE_GRATER = 104;
     private UriMatcher muriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder ScoreQuery =
             new SQLiteQueryBuilder();
@@ -28,6 +37,11 @@ public class ScoresProvider extends ContentProvider
             DatabaseContract.scores_table.MATCH_ID + " = ?";
 
 
+    private static final String SCORES_BY_DATE_GRATER =
+             DatabaseContract.scores_table.DATE_COL + " >= ?";
+
+
+
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = DatabaseContract.BASE_CONTENT_URI.toString();
@@ -35,6 +49,8 @@ public class ScoresProvider extends ContentProvider
         matcher.addURI(authority, "league" , MATCHES_WITH_LEAGUE);
         matcher.addURI(authority, "id" , MATCHES_WITH_ID);
         matcher.addURI(authority, "date" , MATCHES_WITH_DATE);
+        matcher.addURI(authority, "dategrater" , MATCHES_WITH_DATE_GRATER);
+
         return matcher;
     }
 
@@ -58,6 +74,11 @@ public class ScoresProvider extends ContentProvider
            {
                return MATCHES_WITH_LEAGUE;
            }
+           else if(link.contentEquals(DatabaseContract.scores_table. buildScoreWithDateGrater().toString()))
+           {
+               return MATCHES_WITH_DATE_GRATER;
+           }
+
         }
         return -1;
     }
@@ -78,6 +99,7 @@ public class ScoresProvider extends ContentProvider
     public String getType(Uri uri)
     {
         final int match = muriMatcher.match(uri);
+
         switch (match) {
             case MATCHES:
                 return DatabaseContract.scores_table.CONTENT_TYPE;
@@ -86,6 +108,8 @@ public class ScoresProvider extends ContentProvider
             case MATCHES_WITH_ID:
                 return DatabaseContract.scores_table.CONTENT_ITEM_TYPE;
             case MATCHES_WITH_DATE:
+                return DatabaseContract.scores_table.CONTENT_TYPE;
+            case MATCHES_WITH_DATE_GRATER:
                 return DatabaseContract.scores_table.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri :" + uri );
@@ -101,17 +125,25 @@ public class ScoresProvider extends ContentProvider
         //Log.v(FetchScoreTask.LOG_TAG,SCORES_BY_LEAGUE);
         //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[0]);
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(match));
+       // Log.e(LOG_TAG," hello hhhhhhh"+match);
         switch (match)
         {
             case MATCHES: retCursor = mOpenHelper.getReadableDatabase().query(
                     DatabaseContract.SCORES_TABLE,
                     projection,null,null,null,null,sortOrder); break;
             case MATCHES_WITH_DATE:
-                    //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[1]);
+                    //Log.v(FetchScoreTask.LOG_TAG, selectionArgs[1]);
                     //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[2]);
+
                     retCursor = mOpenHelper.getReadableDatabase().query(
                     DatabaseContract.SCORES_TABLE,
                     projection,SCORES_BY_DATE,selectionArgs,null,null,sortOrder); break;
+            case MATCHES_WITH_DATE_GRATER:
+               // Log.v(WidgetDataProvider.class.L,selectionArgs[1]);
+                Log.e(LOG_TAG,"ghhhhhhhhhhhhh"+SCORES_BY_DATE_GRATER +selectionArgs);
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        DatabaseContract.SCORES_TABLE,
+                        projection,SCORES_BY_DATE_GRATER,selectionArgs,null,null,sortOrder); break;
             case MATCHES_WITH_ID: retCursor = mOpenHelper.getReadableDatabase().query(
                     DatabaseContract.SCORES_TABLE,
                     projection,SCORES_BY_ID,selectionArgs,null,null,sortOrder); break;

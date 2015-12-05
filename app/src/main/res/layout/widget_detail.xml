@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/widget"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"
@@ -14,12 +14,23 @@
        >
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
-            android:layout_gravity="center"
+            android:layout_gravity="left|center_horizontal"
             android:src="@drawable/ic_launcher"
             />
-    </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="right|center_horizontal"
+            android:paddingTop="15dp"
+            android:textColor="#4B4B4D"
+            android:textStyle="bold" />
+
+    </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -44,7 +55,7 @@
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"
             android:text="@string/empty_forecast_list"
-            android:layout_gravity="center_horizontal|bottom" />
+            android:layout_gravity="center_horizontal|top" />
     </FrameLayout>
 
 </LinearLayout>

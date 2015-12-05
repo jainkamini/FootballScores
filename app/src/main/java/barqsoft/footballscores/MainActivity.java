@@ -7,16 +7,34 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import barqsoft.footballscores.widget.WidgetDataProvider;
+import barqsoft.footballscores.widget.WidgetProvider;
+
 public class MainActivity extends ActionBarActivity
 {
     public static int selected_match_id;
     public static int current_fragment = 2;
     public static String LOG_TAG = "MainActivity";
     private final String save_tag = "Save Test";
+    private  String  test;
     private PagerFragment my_main;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle bundle = getIntent().getExtras();
+
+
+        if(bundle != null) {
+            Log.e(save_tag,"fragmentno : "+current_fragment);
+         //   Log.e(save_tag,"fragmentnonew  : "+bundle.get);
+            selected_match_id=bundle.getInt(WidgetProvider.EXTRA_MATCHID);
+            current_fragment=bundle.getInt(WidgetProvider.EXTRA_FRAGMENT);
+
+
+
+
+        }
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "Reached MainActivity onCreate");
         if (savedInstanceState == null) {
@@ -35,6 +53,14 @@ public class MainActivity extends ActionBarActivity
         return true;
     }
 
+    /*@Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        test=intent.getStringExtra("he");
+        Log.v(save_tag, "will retrive" +intent.getStringExtra("he"));
+        super.onNewIntent(intent);
+    }
+*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -46,6 +72,8 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_about)
         {
             Intent start_about = new Intent(this,AboutActivity.class);
+
+
             startActivity(start_about);
             return true;
         }
@@ -59,6 +87,9 @@ public class MainActivity extends ActionBarActivity
         Log.v(save_tag,"will save");
         Log.v(save_tag,"fragment: "+String.valueOf(my_main.mPagerHandler.getCurrentItem()));
         Log.v(save_tag,"selected id: "+selected_match_id);
+
+
+
         outState.putInt("Pager_Current",my_main.mPagerHandler.getCurrentItem());
         outState.putInt("Selected_match",selected_match_id);
         getSupportFragmentManager().putFragment(outState,"my_main",my_main);
@@ -70,6 +101,8 @@ public class MainActivity extends ActionBarActivity
     {
         Log.v(save_tag,"will retrive");
         Log.v(save_tag,"fragment: "+String.valueOf(savedInstanceState.getInt("Pager_Current")));
+
+
         Log.v(save_tag,"selected id: "+savedInstanceState.getInt("Selected_match"));
         current_fragment = savedInstanceState.getInt("Pager_Current");
         selected_match_id = savedInstanceState.getInt("Selected_match");

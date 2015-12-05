@@ -35,14 +35,35 @@
         </activity>
         <service android:name=".service.myFetchService" />
 
+
         <!-- Today Widget -->
-        <receiver
+      <!-- <receiver
             android:name=".widget.WidgetIntentProvider"
             android:label="@string/title_widget_today" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-               <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
 
+
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_today" />
+        </receiver>
+
+
+
+                <service
+                    android:name=".widget.WidgetRemoteViewsService"
+                    android:exported="false"
+
+                    android:permission="android.permission.BIND_REMOTEVIEWS" />-->
+<!--
+        <receiver
+            android:name=".widget.WProvider"
+            android:label="@string/title_widget_today" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+
+                <action android:name="barqsoft.footballscores.TOAST_ACTION" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_today" />
@@ -50,31 +71,61 @@
        <service android:name=".widget.TodayWidgetIntentService" />
 
 
-                <service
-                    android:name=".widget.WidgetRemoteViewsService"
-
-                    android:exported="false"
-                    android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-       <!-- <receiver
-            android:name=".widget.WProvider"
-            android:label="@string/title_widget_today" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-
-                &lt;!&ndash; <action android:name="barqsoft.footballscores.TOAST_ACTION" />&ndash;&gt;
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info_today" />
-        </receiver>
-        &lt;!&ndash;<service android:name=".widget.TodayWidgetIntentService" />&ndash;&gt;
-
-
         <service
             android:name=".widget.WRemoteViewService"
 
             android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />&ndash;&gt;-->
+
+
+
+        <!-- Widget Receiver -->
+
+        <!--<uses-sdk
+            android:minSdkVersion="8"
+            android:targetSdkVersion="18" />
+        <receiver android:name=".widget.WidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="barqsoft.footballscores.ACTION_TOAST"/>
+                <action android:name="barqsoft.footballscores.EXTRA_MATCHID"/>
+                <action android:name="barqsoft.footballscores.EXTRA_FRAGMENT"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_today" />
+        </receiver>
+        <service
+            android:name=".widget.WidgetService"
+            android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />-->
+        <receiver
+            android:name=".widget.WidgetIntentProvider"
+            android:label="@string/title_widget_today" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
+                <action android:name="barqsoft.footballscores.ACTION_TOAST"/>
+                <action android:name="barqsoft.footballscores.EXTRA_MATCHID"/>
+                <action android:name="barqsoft.footballscores.EXTRA_FRAGMENT"/>
+                <action android:name="barqsoft.footballscores.USER_PRESENT"/>
+
+
+
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_today" />
+        </receiver>
+        <service android:name=".widget.TodayWidgetIntentService" />
+
+
+        <service
+            android:name=".widget.WidgetRemoteViewsService"
+
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>

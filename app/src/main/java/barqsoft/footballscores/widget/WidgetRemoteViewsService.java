@@ -16,6 +16,7 @@ import android.widget.RemoteViewsService;
 import java.lang.annotation.Target;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +30,7 @@ import barqsoft.footballscores.Utilies;
 /**
  * RemoteViewsService controlling the data being shown in the scrollable weather detail widget
  */
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetRemoteViewsService extends RemoteViewsService {
     public final String LOG_TAG = WidgetRemoteViewsService.class.getSimpleName();
@@ -39,7 +41,10 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
             DatabaseContract.scores_table.HOME_COL,
             DatabaseContract.scores_table.AWAY_COL,
             DatabaseContract.scores_table.DATE_COL,
-            DatabaseContract.scores_table.TIME_COL
+            DatabaseContract.scores_table.TIME_COL,
+            DatabaseContract.scores_table.HOME_GOALS_COL,
+            DatabaseContract.scores_table.AWAY_GOALS_COL
+
     };
     // these indices must match the projection
     private static final int INDEX_MATCH_ID = 0;
@@ -48,6 +53,8 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
     private static final int INDEX_AWAY_COL = 3;
     private static final int INDEX_DATE_COL = 4;
     private static final int INDEX_TIME_COL = 5;
+    private static final int INDEX_HOMEGOALS_COL = 6;
+    private static final int INDEX_AWAYGOALS_COL = 7;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -69,18 +76,18 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 // data. Therefore we need to clear (and finally restore) the calling identity so
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
-              //  String location = Utility.getPreferredLocation(DetailWidgetRemoteViewsService.this);
-                Uri dateuri=  DatabaseContract.scores_table.buildScoreWithDate();
+                //  String location = Utility.getPreferredLocation(DetailWidgetRemoteViewsService.this);
+                Uri dateuri = DatabaseContract.scores_table.buildScoreWithDateGrater();
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date dateobj = new Date();
-               Date tomorrow = new Date(dateobj.getTime() +(1000 * 60 * 60 * 24));
+                Date tomorrow = new Date(dateobj.getTime() - (1000 * 60 * 60 * 48));
                 // dateobj.plusDays(1)
                 // dateobj
-                Cursor data =
+                data =
                         getContentResolver().query(dateuri, MATCH_COLUMNS, null,
                                 new String[]{df.format(dateobj)}, DatabaseContract.scores_table.DATE_COL + " ASC");
                 Log.e(LOG_TAG, "datacount  : " + data.getCount());
-               // Binder.restoreCallingIdentity(identityToken);
+                // Binder.restoreCallingIdentity(identityToken);
             }
 
             @Override
@@ -94,20 +101,27 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
             @Override
             public int getCount() {
 
-               // return data.getCount();
+                // return data.getCount();
                 return data == null ? 0 : data.getCount();
             }
 
             @Override
             public RemoteViews getViewAt(int position) {
 
-               if (position == AdapterView.INVALID_POSITION ||
+       /* RemoteViews mView = new RemoteViews(mContext.getPackageName(),
+                android.R.layout.simple_list_item_1);*/
+
+                if (position == AdapterView.INVALID_POSITION ||
                         data == null || !data.moveToPosition(position)) {
+                    Log.e(LOG_TAG, "cursor error");
                     return null;
                 }
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_today);
+                //  if (data.moveToPosition(position) && data !=null) {
 
+                Log.e(LOG_TAG, "datacountremote  : " + data.getCount());
+                //  mView.setTextViewText(android.R.id.text1, mCollections.get(position).toString());
 
                 int matchId = data.getInt(INDEX_MATCH_ID);
                 int matchHomeIcon = (Utilies.getTeamCrestByTeamName(
@@ -118,37 +132,77 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                         data.getString(INDEX_AWAY_COL)));
                 String descriptionAway = data.getString(INDEX_AWAY_COL);
                 String matchTime = data.getString(INDEX_TIME_COL);
+                int homeGoles = data.getInt(INDEX_HOMEGOALS_COL);
+                int awayGoles = data.getInt(INDEX_AWAYGOALS_COL);
+                String matchdate = data.getString(INDEX_DATE_COL);
+
+                String mGoles = "No Scores";
+
+                int mfragment = 2;
 
 
-            //    views.setImageViewResource(R.id.widget_home_crest, matchHomeIcon);
-              //  views.setImageViewResource(R.id.widget_away_crest, matchAwayIcon);
-                // Content Descriptions for RemoteViews were only added in ICS MR1
-
+                mGoles = Utilies.getScores(homeGoles, awayGoles);
                 views.setTextViewText(R.id.widget_home_name, descriptionHome);
 
-                views.setTextViewText(R.id.widget_time, matchTime);
-                views.setTextViewText(R.id.wiget_away_name, descriptionAway);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    setRemoteContentDescription(views, descriptionHome);
+                if ("No Scores".equals(mGoles) || " - ".equals(mGoles)) {
+                    views.setTextViewText(R.id.widget_time, matchTime);
+                } else {
+                    views.setTextViewText(R.id.widget_time, mGoles);
                 }
+                views.setTextViewText(R.id.wiget_away_name, descriptionAway);
+
+                //  mView.setTextColor(android.R.id.text1, Color.BLACK);
+
+           /* final Intent fillInIntent = new Intent();
+            fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
+            final Bundle bundle = new Bundle();
+            bundle.putString(WidgetProvider.EXTRA_STRING,
+                    data.getString(INDEX_MATCH_ID));
+            fillInIntent.putExtras(bundle);
+            views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);*/
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateobj = new Date();
+                Date tomorrow = new Date(dateobj.getTime() + (1000 * 60 * 60 * 24));
+                Date tomorrowafter = new Date(dateobj.getTime() + (1000 * 60 * 60 * 48));
 
 
-               /* final Intent fillInIntent = new Intent();
+                if (matchdate.compareTo(df.format(dateobj)) == 0) {
+                    mfragment = 2;
+                    Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+                } else if (matchdate.compareTo(df.format(tomorrow)) == 0) {
+                    mfragment = 3;
+                    Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+                } else if (matchdate.compareTo(df.format(tomorrowafter)) == 0) {
+                    mfragment = 4;
+                    Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+                }
+                Log.e(LOG_TAG, "Date  : " + matchdate + "," + df.format(dateobj));
+                Log.e(LOG_TAG, "fragmateno in provider   : " + mfragment);
 
-                 Uri dateuri=  DatabaseContract.scores_table.buildScoreWithDate();
-                fillInIntent.setData(dateuri);
-                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);*/
+                final Intent fillInIntent = new Intent();
+                fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
+                final Bundle bundle = new Bundle();
+                bundle.putInt(WidgetProvider.EXTRA_FRAGMENT,
+                        mfragment);
+                bundle.putInt(WidgetProvider.EXTRA_MATCHID,
+                        data.getInt(INDEX_MATCH_ID));
+
+                fillInIntent.putExtras(bundle);
+                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
+
+                //  }
                 return views;
             }
 
+
             @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             private void setRemoteContentDescription(RemoteViews views, String description) {
-               // views.setContentDescription(R.id.widget_icon, description);
+                // views.setContentDescription(R.id.widget_icon, description);
             }
 
             @Override
             public RemoteViews getLoadingView() {
-               // return null;
+                // return null;
                 return new RemoteViews(getPackageName(), R.layout.widget_today);
             }
 

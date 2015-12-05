@@ -34,7 +34,7 @@ public class myFetchService extends IntentService
 {
     public static final String LOG_TAG = "myFetchService";
 
-
+    public static final String  ACTION_DATA_UPDATED="barqsoft.footballscores.ACTION_DATA_UPDATED";
     public myFetchService()
     {
         super("myFetchService");
@@ -47,11 +47,18 @@ public class myFetchService extends IntentService
         getData("p2");
         updateWidgets();
 
+
         return;
     }
 
 
-
+    private void updateWidgets() {
+        Context context = getApplicationContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(WidgetIntentProvider.ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
+    }
 
     public  void getData (String timeFrame)
     {
@@ -290,12 +297,6 @@ public class myFetchService extends IntentService
 
     }
 
-    private void updateWidgets() {
-               Context context = getApplicationContext();
-                // Setting the package ensures that only components in our app will receive the broadcast
-                      Intent dataUpdatedIntent = new Intent(WidgetIntentProvider.ACTION_DATA_UPDATED)
-                              .setPackage(context.getPackageName());
-               context.sendBroadcast(dataUpdatedIntent);
-           }
+
 }
 

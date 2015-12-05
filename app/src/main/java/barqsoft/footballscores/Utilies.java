@@ -65,6 +65,10 @@ public class Utilies
         }
     }
 
+
+    public static int positionForRTL(int position, int total) {
+        return total - position - 1;
+    }
     public static int getTeamCrestByTeamName (String teamname)
     {
         if (teamname==null){return R.drawable.no_icon;}

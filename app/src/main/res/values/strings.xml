@@ -40,4 +40,37 @@
     <!-- Strings related to Widgets -->
        <string name="title_widget_today">Football Scores</string>
     <string name="empty_forecast_list">No Matchches  Information Available</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="HomeTeamImage">Home Team Image</string>
+    <string name="AwayTeamImage">Away Team Image</string>
+    <string name="PageSwitcher">Switch pages here</string>
+    <string name="myFetchService">myFetchService</string>
+    <string name="footballscoreshashtag">#Football_Scores</string>
+    <string name="HomeTeamContentDescrip">"Home team: "</string>
+    <string name="AwayTeamContentDescrip">"Away Team: "</string>
+    <string name="MatchTimeContentDescrip">"Match time is at: "</string>
+    <string name="ScoreContentDescrip">"The score is: "</string>
+    <string name="UnknownURI">Unknown uri :</string>
+    <string name="NullCursorException">NULL CURSOR RETURNED</string>
+    <string name="CursorCouldNotGoToFirst">COULD NOT GO TO FIRST</string>
+    <string name="NoScoreContentDescrip">NO SCORE</string>
+    <string name="GroupStageMatchDay" >Group Stages, Matchday : 6</string>
+    <string name="NumberMatchday" >"Matchday : "</string>
+    <string name="FinalMatchDay" >Final</string>
+    <string name="MatchdaySemiFinal" >SemiFinal</string>
+    <string name="QuarterFinalMatchDay" >QuarterFinal</string>
+    <string name="FirstKnockoutRoundMatchDay" >First Knockout round</string>
+    <string name="SeriaLeage" >Seria A</string>
+    <string name="PremierLeague" >Premier League</string>
+    <string name="UEFAChampionsLeague" >UEFA Champions League</string>
+    <string name="PrimeraDivisionLeauge" >Primera Division</string>
+    <string name="BundesligaLeague" >Bundesliga</string>
+    <string name="UnknownLeague" >Not known League Please report</string>
+    <string name="HomeTeam">Home Team</string>
+    <string name="dash" translatable = "false">-</string>
+    <string name="AwayTeam">Away Team</string>
+    <string name="NoData">No Data Was Loaded</string>
+    <string name="dashWithSpace" translatable= "false">" - "</string>
+    <string name="noScore">No Score</string>
 </resources>
