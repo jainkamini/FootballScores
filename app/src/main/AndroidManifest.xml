@@ -42,7 +42,13 @@
             android:label="@string/title_widget_today" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
                 <action android:name="barqsoft.footballscores.ACTION_TOAST"/>
+                <action android:name="barqsoft.footballscores.EXTRA_MATCHID"/>
+                <action android:name="barqsoft.footballscores.EXTRA_FRAGMENT"/>
+                <action android:name="barqsoft.footballscores.USER_PRESENT"/>
+                <action android:name="barqsoft.footballscores.EXTRA_POSITION" />
             </intent-filter>
 
             <meta-data
@@ -54,26 +60,7 @@
             android:name=".widget.TodayWidgetIntentService"
 
            />
-<!--
-        <receiver
-            android:name=".widget.WProvider"
-            android:label="@string/title_widget_today" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 
-                <action android:name="barqsoft.footballscores.TOAST_ACTION" />
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info_today" />
-        </receiver>
-       <service android:name=".widget.TodayWidgetIntentService" />
-
-
-        <service
-            android:name=".widget.WRemoteViewService"
-
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />&ndash;&gt;-->
 
 
 

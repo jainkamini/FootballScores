@@ -157,14 +157,14 @@ public class TodayWidgetIntentService extends IntentService {
             Intent clickingIntent = new Intent(getApplicationContext(), MainActivity.class);
 
             final Bundle bundle = new Bundle();
-            bundle.putInt(WidgetIntentProvider.EXTRA_FRAGMENT,
+            bundle.putInt(TodayWidgetProvider.EXTRA_FRAGMENT,
                     2);
-            bundle.putInt(WidgetIntentProvider.EXTRA_MATCHID,
+            bundle.putInt(TodayWidgetProvider.EXTRA_MATCHID,
                     matchId);
-            bundle.putInt(WidgetIntentProvider.EXTRA_POSITION,
+            bundle.putInt(TodayWidgetProvider.EXTRA_POSITION,
                     0);
 
-            clickingIntent.setAction(WidgetProvider.ACTION_TOAST);
+            clickingIntent.setAction(TodayWidgetProvider.ACTION_TOAST);
             clickingIntent.putExtras(bundle);
             clickingIntent.setData(Uri.parse(clickingIntent
                     .toUri(Intent.URI_INTENT_SCHEME)));
@@ -176,19 +176,7 @@ public class TodayWidgetIntentService extends IntentService {
             views.setOnClickPendingIntent(R.id.widget, onClickPendingIntent);
 
 
-           /* final Intent fillInIntent = new Intent();
-            fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
-            final Bundle bundle = new Bundle();
-            bundle.putInt(WidgetIntentProvider.EXTRA_FRAGMENT,
-                    mfragment);
-            bundle.putInt(WidgetIntentProvider.EXTRA_MATCHID,
-                    matchId);
-            bundle.putInt(WidgetIntentProvider.EXTRA_POSITION ,
-                    0 );
 
-
-            fillInIntent.putExtras(bundle);
-            views.setOnClickFillInIntent(R.id.widget, fillInIntent);*/
             appWidgetManager.updateAppWidget(appWidgetId, views);
             // updateWidgets();
             // Log.e(TodayWidgetProvider.LOG_TAG, "I am inside here");

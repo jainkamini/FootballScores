@@ -37,7 +37,13 @@ public class TodayWidgetProvider extends AppWidgetProvider {
 
     public static final String LOG_TAG = "TodayWidgetProvider";
 
-
+    public static final String ACTION_DATA_UPDATED =
+            "barqsoft.footballscores.ACTION_DATA_UPDATED";
+    public static final String ACTION_TOAST = " barqsoft.footballscores.ACTION_TOAST";
+    public static final String EXTRA_MATCHID = " barqsoft.footballscores.EXTRA_MATCHID";
+    public static final String EXTRA_FRAGMENT = " barqsoft.footballscores.EXTRA_FRAGMENT";
+    public static final String USER_PRESENT = " barqsoft.footballscores.USER_PRESENT";
+    public static final String EXTRA_POSITION = " barqsoft.footballscores.EXTRA_POSITION";
      @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
          context.startService(new Intent(context, TodayWidgetIntentService.class));

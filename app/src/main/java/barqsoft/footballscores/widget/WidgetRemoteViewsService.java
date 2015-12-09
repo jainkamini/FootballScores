@@ -163,13 +163,7 @@ int mPosition=-1;
 
                 //  mView.setTextColor(android.R.id.text1, Color.BLACK);
 
-           /* final Intent fillInIntent = new Intent();
-            fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
-            final Bundle bundle = new Bundle();
-            bundle.putString(WidgetProvider.EXTRA_STRING,
-                    data.getString(INDEX_MATCH_ID));
-            fillInIntent.putExtras(bundle);
-            views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);*/
+
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date dateobj = new Date();
                 Date tomorrow = new Date(dateobj.getTime() + (1000 * 60 * 60 * 24));

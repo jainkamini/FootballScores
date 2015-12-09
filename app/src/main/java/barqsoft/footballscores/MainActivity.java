@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 import barqsoft.footballscores.widget.WidgetDataProvider;
 import barqsoft.footballscores.widget.WidgetIntentProvider;
-import barqsoft.footballscores.widget.WidgetProvider;
 
 public class MainActivity extends ActionBarActivity
 {
