@@ -56,6 +56,7 @@ public class WidgetIntentProvider extends AppWidgetProvider {
     public static final String EXTRA_MATCHID = " barqsoft.footballscores.EXTRA_MATCHID";
     public static final String EXTRA_FRAGMENT = " barqsoft.footballscores.EXTRA_FRAGMENT";
     public static final String USER_PRESENT = " barqsoft.footballscores.USER_PRESENT";
+    public static final String EXTRA_POSITION = " barqsoft.footballscores.EXTRA_POSITION";
     public static final String LOG_TAG = "WidgetIntentProvider";
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Perform this loop procedure for each App Widget that belongs to this provider
@@ -83,6 +84,8 @@ public class WidgetIntentProvider extends AppWidgetProvider {
             final PendingIntent onClickPendingIntent = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(onItemClick)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setPendingIntentTemplate(R.id.widget_list,
+                    onClickPendingIntent);
 
 
 

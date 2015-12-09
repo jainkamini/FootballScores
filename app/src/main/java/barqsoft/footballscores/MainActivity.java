@@ -6,8 +6,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import barqsoft.footballscores.widget.WidgetDataProvider;
+import barqsoft.footballscores.widget.WidgetIntentProvider;
 import barqsoft.footballscores.widget.WidgetProvider;
 
 public class MainActivity extends ActionBarActivity
@@ -18,6 +20,7 @@ public class MainActivity extends ActionBarActivity
     private final String save_tag = "Save Test";
     private  String  test;
     private PagerFragment my_main;
+    public static int scroll_position = ListView.INVALID_POSITION;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +31,9 @@ public class MainActivity extends ActionBarActivity
         if(bundle != null) {
             Log.e(save_tag,"fragmentno : "+current_fragment);
          //   Log.e(save_tag,"fragmentnonew  : "+bundle.get);
-            selected_match_id=bundle.getInt(WidgetProvider.EXTRA_MATCHID);
-            current_fragment=bundle.getInt(WidgetProvider.EXTRA_FRAGMENT);
-
+            selected_match_id=bundle.getInt(WidgetIntentProvider.EXTRA_MATCHID);
+            current_fragment=bundle.getInt(WidgetIntentProvider.EXTRA_FRAGMENT);
+            scroll_position=bundle.getInt(WidgetIntentProvider.EXTRA_POSITION );
 
 
 
@@ -87,11 +90,13 @@ public class MainActivity extends ActionBarActivity
         Log.v(save_tag,"will save");
         Log.v(save_tag,"fragment: "+String.valueOf(my_main.mPagerHandler.getCurrentItem()));
         Log.v(save_tag,"selected id: "+selected_match_id);
+        Log.v(save_tag,"Scrollposition: "+scroll_position);
 
 
 
-        outState.putInt("Pager_Current",my_main.mPagerHandler.getCurrentItem());
+        outState.putInt("Pager_Current", my_main.mPagerHandler.getCurrentItem());
         outState.putInt("Selected_match",selected_match_id);
+        outState.putInt("Scroll_position",scroll_position);
         getSupportFragmentManager().putFragment(outState,"my_main",my_main);
         super.onSaveInstanceState(outState);
     }
@@ -106,6 +111,8 @@ public class MainActivity extends ActionBarActivity
         Log.v(save_tag,"selected id: "+savedInstanceState.getInt("Selected_match"));
         current_fragment = savedInstanceState.getInt("Pager_Current");
         selected_match_id = savedInstanceState.getInt("Selected_match");
+        scroll_position = savedInstanceState.getInt("Scroll_position");
+
         my_main = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState,"my_main");
         super.onRestoreInstanceState(savedInstanceState);
     }

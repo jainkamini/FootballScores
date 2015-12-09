@@ -6,6 +6,7 @@ package barqsoft.footballscores.widget;
 import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -38,12 +39,16 @@ import barqsoft.footballscores.service.myFetchService;
  */
 public class TodayWidgetIntentService extends IntentService {
     private static final String[] MATCH_COLUMNS = {
+
             DatabaseContract.scores_table.MATCH_ID,
             DatabaseContract.scores_table.LEAGUE_COL,
             DatabaseContract.scores_table.HOME_COL,
             DatabaseContract.scores_table.AWAY_COL,
             DatabaseContract.scores_table.DATE_COL,
-            DatabaseContract.scores_table.TIME_COL
+            DatabaseContract.scores_table.TIME_COL,
+            DatabaseContract.scores_table.HOME_GOALS_COL,
+            DatabaseContract.scores_table.AWAY_GOALS_COL
+
     };
     // these indices must match the projection
     private static final int INDEX_MATCH_ID = 0;
@@ -52,6 +57,9 @@ public class TodayWidgetIntentService extends IntentService {
     private static final int INDEX_AWAY_COL = 3;
     private static final int INDEX_DATE_COL = 4;
     private static final int INDEX_TIME_COL = 5;
+    private static final int INDEX_HOMEGOALS_COL = 6;
+    private static final int INDEX_AWAYGOALS_COL = 7;
+    public static final String ACTION_TOAST = " barqsoft.footballscores.ACTION_TOAST";
 
     public TodayWidgetIntentService() {
         super("TodayWidgetIntentService");
@@ -75,7 +83,7 @@ public class TodayWidgetIntentService extends IntentService {
         // dateobj
         Cursor data =
                 getContentResolver().query(dateuri, MATCH_COLUMNS, null,
-                        new String[]{df.format(tomorrow)}, DatabaseContract.scores_table.DATE_COL + " ASC");
+                        new String[]{df.format(dateobj)}, DatabaseContract.scores_table.DATE_COL + " ASC");
       //  fetchService.getData("p2");
 
         if (data == null) {
@@ -96,15 +104,21 @@ public class TodayWidgetIntentService extends IntentService {
                 data.getString(INDEX_AWAY_COL)));
         String descriptionAway = data.getString(INDEX_AWAY_COL);
         String matchTime = data.getString(INDEX_TIME_COL);
-        // data.close();
+        int homeGoles = data.getInt(INDEX_HOMEGOALS_COL);
+        int awayGoles = data.getInt(INDEX_AWAYGOALS_COL);
+        String matchdate = data.getString(INDEX_DATE_COL);
 
+        String mGoles = "No Scores";
+
+        int mfragment = 2;
+        Log.e(TodayWidgetProvider.LOG_TAG, "I am inside here");
         // Perform this loop procedure for each Today widget
         for (int appWidgetId : appWidgetIds) {
             int widgetWidth = getWidgetWidth(appWidgetManager, appWidgetId);
 
             //  int  layoutId = R.layout.widget_today;
-            int defaultWidth = getResources().getDimensionPixelSize(R.dimen.widget_today_default_width);
-            int largeWidth = getResources().getDimensionPixelSize(R.dimen.widget_today_large_width);
+            //int defaultWidth = getResources().getDimensionPixelSize(R.dimen.widget_today_default_width);
+            //int largeWidth = getResources().getDimensionPixelSize(R.dimen.widget_today_large_width);
             int layoutId;
            /* if (widgetWidth >= largeWidth) {
                 layoutId = R.layout.widget_today_large;
@@ -114,32 +128,67 @@ public class TodayWidgetIntentService extends IntentService {
                 layoutId = R.layout.widget_today_small;
             }*/
 
-            if (widgetWidth >= largeWidth) {
-                layoutId = R.layout.widget_today_large;
-            } else {
-                layoutId = R.layout.widget_today;
 
-            }
+            layoutId = R.layout.widget_today;
             RemoteViews views = new RemoteViews(getPackageName(), layoutId);
-
-            // Add the data to the RemoteViews
-            views.setImageViewResource(R.id.widget_home_crest, matchHomeIcon);
-            views.setImageViewResource(R.id.widget_away_crest, matchAwayIcon);
-            // Content Descriptions for RemoteViews were only added in ICS MR1
 
             views.setTextViewText(R.id.widget_home_name, descriptionHome);
 
+
             views.setTextViewText(R.id.widget_time, matchTime);
+
+            views.setTextViewText(R.id.score_textview, Utilies.getScores(homeGoles, awayGoles,getApplicationContext()));
+
+
             views.setTextViewText(R.id.wiget_away_name, descriptionAway);
+            views.setImageViewResource(R.id.home_crest, Utilies.getTeamCrestByTeamName(
+                    data.getString(INDEX_HOME_COL)));
+            views.setImageViewResource(R.id.away_crest, Utilies.getTeamCrestByTeamName(
+                    data.getString(INDEX_AWAY_COL)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 setRemoteContentDescription(views, descriptionHome);
             }
             // Create an Intent to launch MainActivity
-            Intent launchIntent = new Intent(this, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+           // Intent launchIntent = new Intent(this, MainActivity.class);
+           // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
+           // views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
+            Intent clickingIntent = new Intent(getApplicationContext(), MainActivity.class);
+
+            final Bundle bundle = new Bundle();
+            bundle.putInt(WidgetIntentProvider.EXTRA_FRAGMENT,
+                    2);
+            bundle.putInt(WidgetIntentProvider.EXTRA_MATCHID,
+                    matchId);
+            bundle.putInt(WidgetIntentProvider.EXTRA_POSITION,
+                    0);
+
+            clickingIntent.setAction(WidgetProvider.ACTION_TOAST);
+            clickingIntent.putExtras(bundle);
+            clickingIntent.setData(Uri.parse(clickingIntent
+                    .toUri(Intent.URI_INTENT_SCHEME)));
+
+
+            final PendingIntent onClickPendingIntent = TaskStackBuilder.create(getApplicationContext())
+                    .addNextIntentWithParentStack(clickingIntent)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setOnClickPendingIntent(R.id.widget, onClickPendingIntent);
+
+
+           /* final Intent fillInIntent = new Intent();
+            fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
+            final Bundle bundle = new Bundle();
+            bundle.putInt(WidgetIntentProvider.EXTRA_FRAGMENT,
+                    mfragment);
+            bundle.putInt(WidgetIntentProvider.EXTRA_MATCHID,
+                    matchId);
+            bundle.putInt(WidgetIntentProvider.EXTRA_POSITION ,
+                    0 );
+
+
+            fillInIntent.putExtras(bundle);
+            views.setOnClickFillInIntent(R.id.widget, fillInIntent);*/
             appWidgetManager.updateAppWidget(appWidgetId, views);
             // updateWidgets();
             // Log.e(TodayWidgetProvider.LOG_TAG, "I am inside here");

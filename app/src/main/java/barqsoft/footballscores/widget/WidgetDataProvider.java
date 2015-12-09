@@ -120,8 +120,8 @@ int mfragment=2;
 
 
 
-        mGoles=  Utilies.getScores(homeGoles,awayGoles);
-            views.setTextViewText(R.id.widget_home_name, descriptionHome);
+      /*  mGoles=  Utilies.getScores(homeGoles,awayGoles);
+            views.setTextViewText(R.id.widget_home_name, descriptionHome);*/
 
         if ("No Scores".equals(mGoles)||  " - " .equals(mGoles)) {
             views.setTextViewText(R.id.widget_time, matchTime);

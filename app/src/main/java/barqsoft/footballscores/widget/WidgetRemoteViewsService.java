@@ -1,6 +1,7 @@
 package barqsoft.footballscores.widget;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -55,11 +56,11 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
     private static final int INDEX_TIME_COL = 5;
     private static final int INDEX_HOMEGOALS_COL = 6;
     private static final int INDEX_AWAYGOALS_COL = 7;
-
-    @Override
+   // Context mcontext=  getApplicationContext();
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
             private Cursor data = null;
+
 
             @Override
             public void onCreate() {
@@ -77,12 +78,16 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
                 //  String location = Utility.getPreferredLocation(DetailWidgetRemoteViewsService.this);
+              //  Uri dateuri = DatabaseContract.scores_table.buildScoreWithDate();
                 Uri dateuri = DatabaseContract.scores_table.buildScoreWithDateGrater();
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date dateobj = new Date();
-                Date tomorrow = new Date(dateobj.getTime() - (1000 * 60 * 60 * 48));
+               // Date tomorrow = new Date(dateobj.getTime() - (1000 * 60 * 60 * 48));
                 // dateobj.plusDays(1)
                 // dateobj
+                /*data =
+                        getContentResolver().query(dateuri, MATCH_COLUMNS, null,
+                                new String[]{df.format(dateobj)}, DatabaseContract.scores_table.DATE_COL + " ASC");*/
                 data =
                         getContentResolver().query(dateuri, MATCH_COLUMNS, null,
                                 new String[]{df.format(dateobj)}, DatabaseContract.scores_table.DATE_COL + " ASC");
@@ -117,7 +122,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                     return null;
                 }
                 RemoteViews views = new RemoteViews(getPackageName(),
-                        R.layout.widget_today);
+                        R.layout.widget_collection_item);
                 //  if (data.moveToPosition(position) && data !=null) {
 
                 Log.e(LOG_TAG, "datacountremote  : " + data.getCount());
@@ -139,17 +144,22 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 String mGoles = "No Scores";
 
                 int mfragment = 2;
+int mPosition=-1;
 
 
-                mGoles = Utilies.getScores(homeGoles, awayGoles);
                 views.setTextViewText(R.id.widget_home_name, descriptionHome);
 
-                if ("No Scores".equals(mGoles) || " - ".equals(mGoles)) {
-                    views.setTextViewText(R.id.widget_time, matchTime);
-                } else {
-                    views.setTextViewText(R.id.widget_time, mGoles);
-                }
+
+                views.setTextViewText(R.id.widget_time, matchTime);
+
+                    views.setTextViewText(R.id.score_textview, Utilies.getScores(homeGoles, awayGoles,getApplicationContext()));
+
+
                 views.setTextViewText(R.id.wiget_away_name, descriptionAway);
+                views.setImageViewResource(R.id.home_crest, Utilies.getTeamCrestByTeamName(
+                        data.getString(INDEX_HOME_COL)));
+                views.setImageViewResource(R.id.away_crest,Utilies.getTeamCrestByTeamName(
+                        data.getString(INDEX_AWAY_COL)));
 
                 //  mView.setTextColor(android.R.id.text1, Color.BLACK);
 
@@ -163,7 +173,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date dateobj = new Date();
                 Date tomorrow = new Date(dateobj.getTime() + (1000 * 60 * 60 * 24));
-                Date tomorrowafter = new Date(dateobj.getTime() + (1000 * 60 * 60 * 48));
+                Date tomorrowafter = new Date(dateobj.getTime() +(1000 * 60 * 60 * 48));
 
 
                 if (matchdate.compareTo(df.format(dateobj)) == 0) {
@@ -173,19 +183,43 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                     mfragment = 3;
                     Log.e(LOG_TAG, "datacountremote  : " + mfragment);
                 } else if (matchdate.compareTo(df.format(tomorrowafter)) == 0) {
-                    mfragment = 4;
+                    mfragment =4 ;
                     Log.e(LOG_TAG, "datacountremote  : " + mfragment);
                 }
                 Log.e(LOG_TAG, "Date  : " + matchdate + "," + df.format(dateobj));
                 Log.e(LOG_TAG, "fragmateno in provider   : " + mfragment);
+             //   Log.e(LOG_TAG, "Postion of item   : " + position);
+
+                for (int i =0 ;i<=position;i++)
+                {
+                    data.moveToPosition(i);
+                    if (data.getString(INDEX_DATE_COL).compareTo(df.format(dateobj)) == 0) {
+                        mPosition++;
+                    } else if (data.getString(INDEX_DATE_COL).compareTo(df.format(tomorrow)) == 0) {
+                        mPosition++;
+                        Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+                    } else if (data.getString(INDEX_DATE_COL).compareTo(df.format(tomorrowafter)) == 0) {
+                        mPosition++ ;
+                        Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+                    }
+
+                    if (matchId == data.getInt(INDEX_MATCH_ID))
+                    {
+                        break ;
+                    }
+                }
+                Log.e(LOG_TAG, "Postion of item   : " + mPosition);
 
                 final Intent fillInIntent = new Intent();
-                fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
+                fillInIntent.setAction(WidgetIntentProvider.ACTION_TOAST);
                 final Bundle bundle = new Bundle();
-                bundle.putInt(WidgetProvider.EXTRA_FRAGMENT,
+                bundle.putInt(WidgetIntentProvider.EXTRA_FRAGMENT,
                         mfragment);
-                bundle.putInt(WidgetProvider.EXTRA_MATCHID,
-                        data.getInt(INDEX_MATCH_ID));
+                bundle.putInt(WidgetIntentProvider.EXTRA_MATCHID,
+                        matchId);
+                bundle.putInt(WidgetIntentProvider.EXTRA_POSITION ,
+                        mPosition);
+
 
                 fillInIntent.putExtras(bundle);
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
@@ -203,7 +237,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
             @Override
             public RemoteViews getLoadingView() {
                 // return null;
-                return new RemoteViews(getPackageName(), R.layout.widget_today);
+                return new RemoteViews(getPackageName(), R.layout.widget_collection_item);
             }
 
             @Override

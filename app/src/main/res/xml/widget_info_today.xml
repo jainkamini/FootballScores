@@ -13,37 +13,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<!--
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/widget_today_small"
+    android:initialLayout="@layout/widget_today"
     android:minHeight="@dimen/widget_today_default_height"
     android:minWidth="@dimen/widget_today_default_width"
-    android:updatePeriodMillis="0" />-->
+    android:updatePeriodMillis="1800000" />
 
-<!--<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:initialKeyguardLayout="@layout/widget_detail"
-    android:initialLayout="@layout/widget_detail"
-    android:minHeight="@dimen/widget_today_default_height"
-    android:minResizeHeight="@dimen/widget_today_min_resize_height"
-    android:minResizeWidth="@dimen/widget_today_min_resize_width"
-    android:minWidth="@dimen/widget_today_default_width"
 
-    android:resizeMode="horizontal"
-    android:updatePeriodMillis="0"
-    android:widgetCategory="home_screen|keyguard"
-    tools:ignore="UnusedAttribute" />-->
 
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:initialKeyguardLayout="@layout/widget_detail"
-    android:initialLayout="@layout/widget_detail"
-    android:minHeight="@dimen/widget_detail_default_height"
-    android:minResizeHeight="@dimen/widget_detail_min_resize_height"
-    android:minResizeWidth="@dimen/widget_detail_min_resize_width"
-    android:minWidth="@dimen/widget_detail_default_width"
 
-    android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="1800000"
-    android:widgetCategory="home_screen|keyguard"
-    tools:ignore="UnusedAttribute" />

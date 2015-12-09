@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+//import java.util.logging.Handler;
+import android.os.Handler;
+
 import barqsoft.footballscores.service.myFetchService;
 
 /**
@@ -26,9 +29,14 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
     private static final String LOG_TAG = MainScreenFragment.class.getSimpleName();
-    private int mPosition = ListView.INVALID_POSITION;
-    ListView score_list;
+   // private int mPosition = ListView.INVALID_POSITION;
 
+    private int mPosition=MainActivity.scroll_position;
+    ListView score_list;
+    private static final String[] MATCH_COLUMNS = {
+            DatabaseContract.scores_table.MATCH_ID
+    };
+    private static final int INDEX_MATCH_ID = 0;
     private static final String SELECTED_KEY = "selected_position";
     public MainScreenFragment()
     {
@@ -59,6 +67,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter = new scoresAdapter(getActivity(),null,0);
         score_list.setAdapter(mAdapter);
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
+
+
+
+
         mAdapter.detail_match_id = MainActivity.selected_match_id;
         score_list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -70,7 +82,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                 mAdapter.detail_match_id = selected.match_id;
                 MainActivity.selected_match_id = (int) selected.match_id;
                 mAdapter.notifyDataSetChanged();
-                mPosition = position;
+               mPosition = position;
+                timerDelayRunForScroll(0);
+               // mPosition=MainActivity.scroll_position;
+
             }
 
 
@@ -122,15 +137,50 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             i++;
             cursor.moveToNext();
         }
+
+
         // Log.v(LOG_TAG, "Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
+
+
+
         //mAdapter.notifyDataSetChanged();
         if (mPosition != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
-            score_list.smoothScrollToPosition(mPosition);
+            //score_list.smoothScrollToPosition(mPosition);
+            timerDelayRunForScroll(0);
+
+
+
         }
     }
+
+
+   /* public void timerDelayRunForScroll(long time) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                try {
+                    score_list.smoothScrollToPosition(mPosition);
+                } catch (Exception e) {}
+            }
+        }, time);
+    }*/
+   public void timerDelayRunForScroll(long time) {
+       Handler handler = new Handler();
+       handler.post(new Runnable() {
+           public void run() {
+               try {
+                   score_list.setSelection(mPosition);
+                 score_list.smoothScrollToPosition(mPosition);
+               } catch (Exception e) {}
+           }
+       });
+   }
+
+
+
 
 
 
