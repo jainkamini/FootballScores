@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
-import barqsoft.footballscores.widget.WidgetDataProvider;
+
 
 /**
  * Created by yehya khaled on 2/25/2015.

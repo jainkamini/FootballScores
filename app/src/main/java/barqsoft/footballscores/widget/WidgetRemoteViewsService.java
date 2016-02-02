@@ -144,7 +144,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 String mGoles = "No Scores";
 
                 int mfragment = 2;
-int mPosition=-1;
+            int mPosition=-1;
 
 
                 views.setTextViewText(R.id.widget_home_name, descriptionHome);
@@ -191,10 +191,10 @@ int mPosition=-1;
                         mPosition++;
                     } else if (data.getString(INDEX_DATE_COL).compareTo(df.format(tomorrow)) == 0) {
                         mPosition++;
-                        Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+
                     } else if (data.getString(INDEX_DATE_COL).compareTo(df.format(tomorrowafter)) == 0) {
                         mPosition++ ;
-                        Log.e(LOG_TAG, "datacountremote  : " + mfragment);
+
                     }
 
                     if (matchId == data.getInt(INDEX_MATCH_ID))

@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import barqsoft.footballscores.widget.WidgetDataProvider;
+
 import barqsoft.footballscores.widget.WidgetIntentProvider;
 
 public class MainActivity extends ActionBarActivity
